@@ -11,10 +11,10 @@ import java.util.concurrent.TimeUnit;
 
 @SpringBootTest
 //@ActiveProfiles("live")
-class RedisClientTest {
+class RedisUtilTest {
 
     @Autowired
-    RedisClient redisClient;
+    RedisUtil redisUtil;
 
 //    @Autowired
 //    RedisTemplate<String, List<Message>> redisTemplate;
@@ -24,7 +24,7 @@ class RedisClientTest {
         String KEY_FORMAT = "ai::%s::%s";
         String user = "anonymous"; // userSeq (로그인시 userSeq)
         String key = String.format(KEY_FORMAT, user, "2ceee3b2-de24-43b5-819c-110ff5722b95");
-        Object value = redisClient.getValue(key);
+        Object value = redisUtil.getValue(key);
         System.out.println("value = " + value);
 //        System.out.println("value = " + CommonUtil.prettyPrintJson(value.toString()));
     }
@@ -59,8 +59,8 @@ class RedisClientTest {
         // 317 bytes
 //        redisClient.setValue("opsForValue", messages, Duration.ofMinutes(1));
         // 221 bytes
-        redisClient.setValue("opsForValue", CommonUtil.toJson(messages), Duration.ofMinutes(1));
-        Object value = redisClient.getValue("opsForValue");
+        redisUtil.setValue("opsForValue", CommonUtil.toJson(messages), Duration.ofMinutes(1));
+        Object value = redisUtil.getValue("opsForValue");
         System.out.println("value = " + value);
         List<Message> list = CommonUtil.toList((String) value, Message.class);
         for (Message message : list) {
@@ -99,12 +99,12 @@ class RedisClientTest {
 
     @Test
     void leftPush() {
-        redisClient.leftPush("leftPush", "leftPushValue");
+        redisUtil.leftPush("leftPush", "leftPushValue");
         for (int i = 0; i < 10; i++) {
-            redisClient.leftPush("leftPush", "leftPushValue" + i);
+            redisUtil.leftPush("leftPush", "leftPushValue" + i);
         }
 
-        List<Object> leftPush = redisClient.listRange("leftPush", 0, 9);
+        List<Object> leftPush = redisUtil.listRange("leftPush", 0, 9);
         for (Object o : leftPush) {
             System.out.println("o = " + o);
         }
@@ -112,33 +112,33 @@ class RedisClientTest {
 
     @Test
     void leftPop() {
-        Object leftPop = redisClient.leftPop("leftPush");
+        Object leftPop = redisUtil.leftPop("leftPush");
         System.out.println("leftPop = " + leftPop);
     }
 
     @Test
     void rightPop() {
-        Object rightPop = redisClient.rightPop("leftPush");
+        Object rightPop = redisUtil.rightPop("leftPush");
         System.out.println("rightPop = " + rightPop);
     }
 
     @Test
     void rightPopAndLeftPush() {
-        Object rightPopAndLeftPush = redisClient.rightPopAndLeftPush("leftPush", "leftPush");
+        Object rightPopAndLeftPush = redisUtil.rightPopAndLeftPush("leftPush", "leftPush");
         System.out.println("rightPopAndLeftPush = " + rightPopAndLeftPush);
     }
 
     @Test
     void listIndex() {
-        Object listIndex = redisClient.listIndex("leftPush", 0);
+        Object listIndex = redisUtil.listIndex("leftPush", 0);
         System.out.println("listIndex = " + listIndex);
-        listIndex = redisClient.listIndex("leftPush", 1);
+        listIndex = redisUtil.listIndex("leftPush", 1);
         System.out.println("listIndex = " + listIndex);
     }
 
     @Test
     void listRange() {
-        List<Object> listRange = redisClient.listRange("leftPush", 0, 3);
+        List<Object> listRange = redisUtil.listRange("leftPush", 0, 3);
         for (Object o : listRange) {
             System.out.println("o = " + o);
         }
@@ -146,21 +146,21 @@ class RedisClientTest {
 
     @Test
     void listSet() { // index에 데이터를 넣거나 있으면 변경한다.
-        redisClient.listSet("leftPush", 1, "listSet10");
-        Object listIndex = redisClient.listIndex("leftPush", 1);
+        redisUtil.listSet("leftPush", 1, "listSet10");
+        Object listIndex = redisUtil.listIndex("leftPush", 1);
         System.out.println("listIndex = " + listIndex);
     }
 
     @Test
     void listSize() {
-        Long listSize = redisClient.listSize("leftPush");
+        Long listSize = redisUtil.listSize("leftPush");
         System.out.println("listSize = " + listSize);
     }
 
     @Test
     void listTrim() {
-        redisClient.listTrim("leftPush", 0, 3);
-        List<Object> listRange = redisClient.listRange("leftPush", 0, 3);
+        redisUtil.listTrim("leftPush", 0, 3);
+        List<Object> listRange = redisUtil.listRange("leftPush", 0, 3);
         for (Object o : listRange) {
             System.out.println("o = " + o);
         }
@@ -168,49 +168,49 @@ class RedisClientTest {
 
     @Test
     void delete() {
-        redisClient.delete("leftPush");
-        Long listSize = redisClient.listSize("leftPush");
+        redisUtil.delete("leftPush");
+        Long listSize = redisUtil.listSize("leftPush");
         System.out.println("listSize = " + listSize);
     }
 
     @Test
     void setValue() {
-        redisClient.setValue("setValue", "setValue", Duration.ofMinutes(1));
-        Object value = redisClient.getValue("setValue");
+        redisUtil.setValue("setValue", "setValue", Duration.ofMinutes(1));
+        Object value = redisUtil.getValue("setValue");
         System.out.println("value = " + value);
     }
 
     @Test
     void getValue() {
-        Object value = redisClient.getValue("setValue");
+        Object value = redisUtil.getValue("setValue");
         System.out.println("value = " + value);
     }
 
     @Test
     void setValue2() {
         TimeUnit timeUnit = TimeUnit.MINUTES;
-        redisClient.setValue("setValue2", "setValue2", 1, timeUnit);
-        Object value = redisClient.getValue("setValue2");
+        redisUtil.setValue("setValue2", "setValue2", 1, timeUnit);
+        Object value = redisUtil.getValue("setValue2");
         System.out.println("value = " + value);
     }
 
     @Test
     void getValue2() {
-        Object value = redisClient.getValue("setValue2");
+        Object value = redisUtil.getValue("setValue2");
         System.out.println("value = " + value);
     }
 
     @Test
     void putHash() {
-        redisClient.putHash("putHash", "putHashKey1", "putHashValue1");
-        Object hash = redisClient.getHash("putHash", "putHashKey");
+        redisUtil.putHash("putHash", "putHashKey1", "putHashValue1");
+        Object hash = redisUtil.getHash("putHash", "putHashKey");
         System.out.println("hash = " + hash);
     }
 
     @Test
     void deleteHash() {
-        redisClient.deleteHash("putHash", List.of("putHashKey", "putHashKey1").toArray());
-        Object hash = redisClient.getHash("putHash", "putHashKey");
+        redisUtil.deleteHash("putHash", List.of("putHashKey", "putHashKey1").toArray());
+        Object hash = redisUtil.getHash("putHash", "putHashKey");
         System.out.println("hash = " + hash);
     }
 }

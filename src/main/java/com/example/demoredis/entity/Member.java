@@ -19,6 +19,7 @@ public class Member {
     private String id;
     private String name;
     private int age;
+    private int point;
 
     public Member(String name, int age) {
         this.name = name;

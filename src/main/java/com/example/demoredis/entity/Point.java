@@ -18,4 +18,12 @@ public class Point {
     private Member member;
     private String content;
     private int score;
+
+    public static Point createPoint(Member member, String content, int score) {
+        return Point.builder()
+                .member(member)
+                .content(content)
+                .score(score)
+                .build();
+    }
 }

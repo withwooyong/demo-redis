@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 
 @Component
-public class RedisClient {
+public class RedisUtil {
 
     private final RedisTemplate<Object, Object> redisTemplate;
     private final ValueOperations<Object, Object> valueOperations;
@@ -23,13 +23,17 @@ public class RedisClient {
     private final SetOperations<Object, Object> setOperations;
     private final ZSetOperations<Object, Object> zSetOperations;
 
-    public RedisClient(RedisTemplate<Object, Object> redisTemplate) {
+    public RedisUtil(RedisTemplate<Object, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
         this.valueOperations = redisTemplate.opsForValue();
         this.hashOperations = redisTemplate.opsForHash();
         this.listOperations = redisTemplate.opsForList();
         this.setOperations = redisTemplate.opsForSet();
         this.zSetOperations = redisTemplate.opsForZSet();
+    }
+
+    public RedisTemplate<Object, Object> getRedisTemplate() {
+        return redisTemplate;
     }
 
     public SetOperations<Object, Object> getSetOperations() {
