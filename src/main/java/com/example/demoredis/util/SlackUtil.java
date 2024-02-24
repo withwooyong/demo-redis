@@ -11,12 +11,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-/**
- * slack:
- * token: xoxb-3899646727600-5164872452657-uilQfOsoRmOlpYefBxtAgVDX
- * channel:
- * monitor: '#서버-에러-로그'
- */
 @Component
 @Log4j2
 @RequiredArgsConstructor
