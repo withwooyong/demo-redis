@@ -38,7 +38,7 @@ public class RedisConfig {
     private String host;
 
     @Value("${spring.redis.port}")
-    private int port; // 6379
+    private int port;
 
     @Value("${spring.redis.duration}")
     private long duration; // 60
